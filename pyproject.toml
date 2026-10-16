@@ -27,6 +27,7 @@ dependencies = [
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.5"]
+real = ["pandas>=1.5", "pyreadr>=0.5"]
 dev = ["pytest>=7", "build", "matplotlib>=3.5"]
 
 [project.urls]

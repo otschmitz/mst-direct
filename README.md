@@ -125,6 +125,11 @@ mst_direct.baselines: gaussian_copula_simulate, lu_simulate
 tested usage examples. Run `python scripts/download_dms_data.py` to obtain the
 MIT-licensed synthetic DMS benchmark inputs with checksum verification.
 
+The real-data conditional hold-out workflow uses the public Swiss Jura
+trace-metal dataset. Run `python scripts/download_jura_data.py`, install the
+`real` extra, and execute `python scripts/jura_holdout_experiment.py`. Protocol,
+results, and limitations are documented in `docs/JURA_HOLDOUT.md`.
+
 The exact scripts used to generate the manuscript's 200×200 and 100×100
 figures were not included in the PyPI 2.0.0 or arXiv source archives. Therefore,
 this reconstructed repository does not claim end-to-end reproduction of those
