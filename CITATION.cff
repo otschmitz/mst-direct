@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the papers and the archived software release."
+title: "mst-direct: Matching via Sinkhorn Transport for multivariate geostatistical simulation"
+type: software
+version: 2.0.0
+date-released: 2026-05-26
+authors:
+  - family-names: "Bachmann Schmitz"
+    given-names: "Tcharlies"
+    orcid: "https://orcid.org/0009-0007-5467-1327"
+repository-code: "https://github.com/otschmitz/mst-direct"
+url: "https://pypi.org/project/mst-direct/"
+license: MIT
+identifiers:
+  - type: doi
+    value: "10.48550/arXiv.2606.07578"
+    description: "MST-Direct at Scale preprint"
+  - type: doi
+    value: "10.48550/arXiv.2603.18036"
+    description: "Original MST-Direct preprint"

@@ -1,0 +1,35 @@
+{
+  "status": "independent audit rerun; not original manuscript reproduction",
+  "date": "2026-10-16",
+  "parameters": {
+    "beta": 6.0,
+    "n_candidates": 48,
+    "n_iter": 150,
+    "relational_weight": 0.0,
+    "relational_passes": 0,
+    "seed": 42
+  },
+  "environment": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "os": "Linux 7.0.0-30-generic x86_64",
+    "cpu": "Intel Core i7 870 at 2.93 GHz; 4 cores, 8 threads",
+    "physical_memory_gib": 15,
+    "peak_rss_kib_process": 403568
+  },
+  "unconditional_200x200": {
+    "backbone_wall_seconds": 0.06299748300079955,
+    "match_wall_seconds": 38.83141969400094,
+    "assignment_is_permutation": true,
+    "histogram_mse_max": 0.0
+  },
+  "conditional_100x100": {
+    "backbone_wall_seconds": 0.33395693199963716,
+    "match_wall_seconds": 6.6990650900006585,
+    "hard_data_count": 200,
+    "hard_data_max_abs_error": 0.0,
+    "assignment_is_permutation": true,
+    "histogram_mse_max": 0.0
+  }
+}
