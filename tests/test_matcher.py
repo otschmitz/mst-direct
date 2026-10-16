@@ -60,3 +60,23 @@ def test_variogram_reproduction(make_cloud):
     m = np.isfinite(g_bb) & np.isfinite(g_sim)
     corr = np.corrcoef(g_bb[m], g_sim[m])[0, 1]
     assert corr > 0.8
+
+
+def test_whitening_reduces_unmatched_support_for_dependent_cloud():
+    """Independent backbones need decorrelated cost features."""
+    N = 30
+    n = N * N
+    rng = np.random.default_rng(12)
+    x = rng.normal(size=n)
+    cloud = np.column_stack((x, 2 * x + 0.1 * rng.normal(size=n), -x**3))
+    bb = gaussian_backbone((N, N), d=3, rng_range=10, random_state=12)
+
+    old = ScalableMST(n_candidates=24, feature_transform="standardize")
+    new = ScalableMST(n_candidates=24, feature_transform="whiten")
+    old.simulate(bb, cloud)
+    sim = new.simulate(bb, cloud)
+
+    assert new.diagnostics_["candidate_columns_zero_degree"] < old.diagnostics_["candidate_columns_zero_degree"]
+    assert new.diagnostics_["greedy_unmatched_fraction"] < old.diagnostics_["greedy_unmatched_fraction"]
+    assert np.array_equal(np.sort(new.assignment_), np.arange(n))
+    assert np.array_equal(np.sort(sim, axis=0), np.sort(cloud, axis=0))

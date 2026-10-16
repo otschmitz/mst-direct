@@ -1,0 +1,86 @@
+{
+  "status": "corrected 40k single-seed validation",
+  "simulation_seed": 1,
+  "match_seconds": 65.97759733199928,
+  "assignment_is_permutation": true,
+  "diagnostics": {
+    "feature_transform": "whiten",
+    "candidate_count": 96,
+    "candidate_count_requested": 48,
+    "candidate_columns_zero_degree": 1708,
+    "greedy_unmatched": 1997,
+    "greedy_unmatched_fraction": 0.049925,
+    "repair_rounds": 11,
+    "repair_max_distance": 31.5349406924915,
+    "final_match_distance_mean": 1.2799110887476222,
+    "final_match_distance_max": 31.5349406924915
+  },
+  "evaluations": [
+    {
+      "evaluation_seed": 101,
+      "correlations": [
+        0.9880924411832323,
+        0.9524753564528675,
+        0.9928993915956634,
+        0.9981729045843732,
+        0.9895687334468857,
+        0.9484469665504326
+      ],
+      "correlation_min": 0.9484469665504326,
+      "normalized_rmse_max": 0.22867055618242052,
+      "sill_to_cloud_variance": [
+        1.0955945614993603,
+        0.9965052669731757,
+        1.0251614445946287,
+        1.0647735173656816,
+        1.0259018989366961,
+        1.0332020408089277
+      ],
+      "pairs_per_lag_bin": 10000
+    },
+    {
+      "evaluation_seed": 202,
+      "correlations": [
+        0.9864216616714585,
+        0.9570429687076258,
+        0.9898541297621256,
+        0.9968735809646708,
+        0.9865622080308745,
+        0.9580467656364454
+      ],
+      "correlation_min": 0.9570429687076258,
+      "normalized_rmse_max": 0.20618925034198285,
+      "sill_to_cloud_variance": [
+        1.0741300520963946,
+        1.0041098967749658,
+        1.0429732621504835,
+        1.0403996568209148,
+        1.0585359062210613,
+        1.0338605945152741
+      ],
+      "pairs_per_lag_bin": 10000
+    },
+    {
+      "evaluation_seed": 303,
+      "correlations": [
+        0.9923087887015692,
+        0.9593087583276878,
+        0.9934994661525747,
+        0.9972659610577045,
+        0.9932547483166275,
+        0.9666267691290061
+      ],
+      "correlation_min": 0.9593087583276878,
+      "normalized_rmse_max": 0.20891418259666383,
+      "sill_to_cloud_variance": [
+        1.0774583330650263,
+        1.0071136592022858,
+        1.033608434019936,
+        1.0885690890729691,
+        1.0575744689525703,
+        1.031744050051091
+      ],
+      "pairs_per_lag_bin": 10000
+    }
+  ]
+}

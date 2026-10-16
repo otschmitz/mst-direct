@@ -9,7 +9,7 @@ Commands and results:
 
 ```text
 pytest -q
-65 passed
+67 passed
 
 python examples/basic_unconditional.py
 Generated 900 nodes; empirical tuples preserved exactly.
@@ -34,3 +34,19 @@ KiB. Both assignments were permutations; the conditional run honoured all 200
 data tuples with maximum absolute error zero. These results support the narrow
 runtime and invariant claims for this independent configuration, but do not
 reproduce spatial-quality figures or the undisclosed relational configuration.
+
+## Corrected matcher screening
+
+`scripts/corrected_screening_audit.py` evaluates three 10,000-node simulations
+with independent evaluation seeds and 10,000 sampled pairs per lag bin. The
+minimum per-variable variogram-shape correlations were 0.901--0.971, maximum
+normalized shape RMSE was 0.238, and residual repair affected 2.91--3.62% of
+rows. All outputs were exact tuple permutations. Full records are in
+`corrected_screening_audit.json`.
+
+`scripts/corrected_40k_validation.py` then evaluated the 40,000-node seed-1
+case. Matching took 65.98 s with 96 adaptive candidates; 4.99% of rows entered
+nearest-free residual repair. Across three independent metric samples, minimum
+variogram correlations were 0.948--0.959, maximum normalized shape RMSE was
+0.229, and estimated sills were 0.997--1.096 times their target cloud
+variances. See `corrected_40k_validation.json`.

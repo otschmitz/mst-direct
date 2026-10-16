@@ -51,7 +51,9 @@ coords = grid_coords(N, N)                       # (2500, 2)
 cloud  = np.random.default_rng(0).normal(size=(N * N, 3))   # target tuples (any joint)
 
 backbone = gaussian_backbone((N, N), d=3, rng_range=15.0, random_state=0)
-sim = ScalableMST(random_state=0).simulate(backbone, cloud, coords=coords)
+model = ScalableMST(n_candidates=48, max_candidates=96,
+                    feature_transform="whiten", random_state=0)
+sim = model.simulate(backbone, cloud, coords=coords)
 
 # joint distribution preserved exactly (sim is a permutation of cloud)
 assert np.array_equal(np.sort(sim, 0), np.sort(cloud, 0))
@@ -60,11 +62,11 @@ assert np.array_equal(np.sort(sim, 0), np.sort(cloud, 0))
 ### Conditional simulation (honors hard data exactly)
 
 ```python
-from mst_direct import conditional_gaussian_backbone
+from mst_direct import conditional_gaussian_backbone, transport_features
 
 data_idx   = np.array([0, 137, 999])             # hard-data grid locations
-data_tuples_std = (cloud[[5, 6, 7]] - cloud.mean(0)) / cloud.std(0)
-cond_bb = conditional_gaussian_backbone((N, N), coords, data_idx, data_tuples_std,
+latent = transport_features(cloud, "whiten")
+cond_bb = conditional_gaussian_backbone((N, N), coords, data_idx, latent[[5, 6, 7]],
                                         rng_range=15.0, random_state=0)
 sim = ScalableMST(random_state=0).simulate(
     cond_bb, cloud, pinned=(data_idx, np.array([5, 6, 7])), coords=coords)
@@ -88,6 +90,7 @@ MSTDirect(...)                       # v1 dense relational matcher
 ScalableMST(beta, n_candidates, k_relational, lam_relational, n_relax, ...)
     .simulate(backbone, cloud, pinned=None, coords=None)
 mst_simulate(backbone, cloud, ...)
+transport_features(cloud, transform="whiten")
 
 # backbone (prescribed variogram)
 gaussian_backbone(shape, d, rng_range, random_state)
@@ -127,11 +130,13 @@ figures were not included in the PyPI 2.0.0 or arXiv source archives. Therefore,
 this reconstructed repository does not claim end-to-end reproduction of those
 figures. See `docs/REPRODUCIBILITY.md` and `VALIDATION.md`.
 
-The independent scaling audit in `docs/SCALING_AUDIT.md` documents a failure
-regime of the released default configuration: at 40,000 nodes, candidate
-completion can dominate and spatial quality can be seed-sensitive. This record
-is included so users can evaluate the method without relying only on favourable
-realizations.
+The initial independent scaling audit in `docs/SCALING_AUDIT.md` documents a
+failure regime of the original raw-standardized configuration. Corrected
+records in `corrected_screening_audit.json` and
+`corrected_40k_validation.json` use latent whitening, adaptive candidate
+support, nearest-free residual matching, and lag-stratified variograms.
+Returned values remain exact permutations of the untouched cloud; matching
+diagnostics are available in `model.diagnostics_`.
 
 ## License
 

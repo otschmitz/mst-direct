@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mst-direct"
-version = "2.0.0"
+version = "2.1.0"
 description = "Matching via Sinkhorn Transport: multivariate, conditional, large-grid geostatistical simulation that preserves complex non-linear joint distributions exactly."
 readme = "README.md"
 license = "MIT"

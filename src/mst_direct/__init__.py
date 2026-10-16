@@ -70,7 +70,7 @@ from .metrics import histogram2d_similarity, histogram_mse_table, shape_preserva
 from .ppmt import PPMT, ppmt_simulate
 from .relational import relational_match
 from .rounding import greedy_round
-from .scalable import ScalableMST, mst_simulate
+from .scalable import ScalableMST, mst_simulate, transport_features
 from .simulator import MSTDirect
 from .sinkhorn import sinkhorn, sinkhorn_plan
 from .synthetic import (
@@ -92,13 +92,14 @@ from .variograms import (
     variogram_correlation,
 )
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 __all__ = [
     "__version__",
     # simulators
     "MSTDirect",          # v1: dense, exact relational matcher
     "ScalableMST",        # v2: sparse candidate-restricted matcher (+conditioning)
+    "transport_features",
     "mst_simulate",
     # backbone (v2)
     "gaussian_backbone",

@@ -16,6 +16,18 @@ def test_sampled_variogram_rises_to_sill():
     assert np.isfinite(g).all()
 
 
+def test_stratified_variogram_balances_lag_counts():
+    N = 40
+    coords = grid_coords(N, N)
+    field = np.arange(N * N, dtype=float).reshape(N, N)
+    _, _, counts = sampled_variogram(
+        field, coords, n_lags=12, max_dist=20, n_pairs=24_000,
+        sampling="lag_stratified", random_state=3,
+    )
+    assert counts.min() >= 2_000
+    assert counts.max() == counts.min()
+
+
 def test_fit_spherical_recovers_range():
     lags = np.linspace(1.0, 30.0, 15)
     gamma = spherical(lags, sill=1.0, rng=12.0)

@@ -6,6 +6,7 @@ from mst_direct import (
     ScalableMST,
     conditional_gaussian_backbone,
     grid_coords,
+    transport_features,
 )
 
 
@@ -18,9 +19,9 @@ def main() -> None:
     coords = grid_coords(side, side)
     data_rows = np.array([0, 100, 250, 575])
     data_cloud_rows = np.array([3, 9, 21, 37])
-    standardized = (cloud - cloud.mean(0)) / cloud.std(0)
+    latent = transport_features(cloud, "whiten")
     backbone = conditional_gaussian_backbone(
-        (side, side), coords, data_rows, standardized[data_cloud_rows],
+        (side, side), coords, data_rows, latent[data_cloud_rows],
         rng_range=8, random_state=11,
     )
     model = ScalableMST(n_candidates=32, random_state=11)

@@ -1,0 +1,260 @@
+{
+  "status": "corrected 10k screening audit",
+  "runs": [
+    {
+      "simulation_seed": 0,
+      "match_seconds": 15.672882386999845,
+      "assignment_is_permutation": true,
+      "diagnostics": {
+        "feature_transform": "whiten",
+        "candidate_count": 96,
+        "candidate_count_requested": 48,
+        "candidate_columns_zero_degree": 232,
+        "greedy_unmatched": 291,
+        "greedy_unmatched_fraction": 0.0291,
+        "repair_rounds": 5,
+        "repair_max_distance": 21.835216337257148,
+        "final_match_distance_mean": 1.278150976577854,
+        "final_match_distance_max": 21.835216337257148
+      },
+      "evaluations": [
+        {
+          "evaluation_seed": 101,
+          "variogram_correlations": [
+            0.9942407586598261,
+            0.9499577366240127,
+            0.9974612355269823,
+            0.9988779480977413,
+            0.9915009845655439,
+            0.9577244059365134
+          ],
+          "variogram_correlation_min": 0.9499577366240127,
+          "variogram_nrmse_max": 0.21582195302848026,
+          "variogram_sill_to_cloud_variance": [
+            1.0905619375265485,
+            1.041812000944411,
+            1.0841777262230081,
+            1.0918762326665217,
+            1.0109479488305257,
+            1.011462249001674
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 202,
+          "variogram_correlations": [
+            0.9928699164674776,
+            0.9711848229303508,
+            0.9964188533250044,
+            0.9975340463217639,
+            0.9813080150895946,
+            0.9715103590896804
+          ],
+          "variogram_correlation_min": 0.9711848229303508,
+          "variogram_nrmse_max": 0.1939537535476269,
+          "variogram_sill_to_cloud_variance": [
+            1.0946723834556302,
+            1.0582814326858139,
+            1.1021882262663076,
+            1.0800166283775448,
+            1.080389705055957,
+            1.0099644650720632
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 303,
+          "variogram_correlations": [
+            0.9942204505279111,
+            0.9337556836740037,
+            0.9964287790190284,
+            0.998029547754064,
+            0.9887821768527549,
+            0.9384170377087874
+          ],
+          "variogram_correlation_min": 0.9337556836740037,
+          "variogram_nrmse_max": 0.20367612683666575,
+          "variogram_sill_to_cloud_variance": [
+            1.1131032642443277,
+            1.0552019134439672,
+            1.0896122952619738,
+            1.0884151137368832,
+            1.0584964058074855,
+            1.0421301819975162
+          ],
+          "minimum_lag_bin_count": 10000
+        }
+      ]
+    },
+    {
+      "simulation_seed": 1,
+      "match_seconds": 16.039508355999715,
+      "assignment_is_permutation": true,
+      "diagnostics": {
+        "feature_transform": "whiten",
+        "candidate_count": 96,
+        "candidate_count_requested": 48,
+        "candidate_columns_zero_degree": 264,
+        "greedy_unmatched": 362,
+        "greedy_unmatched_fraction": 0.0362,
+        "repair_rounds": 6,
+        "repair_max_distance": 22.917203767371348,
+        "final_match_distance_mean": 1.3738156227166112,
+        "final_match_distance_max": 22.917203767371348
+      },
+      "evaluations": [
+        {
+          "evaluation_seed": 101,
+          "variogram_correlations": [
+            0.9965162658392499,
+            0.9769964348173696,
+            0.9987059453316999,
+            0.9980703277953025,
+            0.9800300521898188,
+            0.9611282462714581
+          ],
+          "variogram_correlation_min": 0.9611282462714581,
+          "variogram_nrmse_max": 0.13560213799502083,
+          "variogram_sill_to_cloud_variance": [
+            1.0659095217945156,
+            1.1346326456710831,
+            1.1640832231864056,
+            1.0794939941530102,
+            1.0896526608794863,
+            1.1319193770369436
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 202,
+          "variogram_correlations": [
+            0.9961428529372137,
+            0.9773292792943997,
+            0.9990546149620261,
+            0.9990766792584165,
+            0.9869762745499672,
+            0.9691980441332156
+          ],
+          "variogram_correlation_min": 0.9691980441332156,
+          "variogram_nrmse_max": 0.1387159855510096,
+          "variogram_sill_to_cloud_variance": [
+            1.08206693689849,
+            1.1158129104021821,
+            1.16711358104503,
+            1.067263847270675,
+            1.0937037983858593,
+            1.108282004057493
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 303,
+          "variogram_correlations": [
+            0.9946383740951199,
+            0.9726776810508321,
+            0.9990268177859917,
+            0.9992580246858253,
+            0.9875793088912517,
+            0.9582536656296373
+          ],
+          "variogram_correlation_min": 0.9582536656296373,
+          "variogram_nrmse_max": 0.13222321031032294,
+          "variogram_sill_to_cloud_variance": [
+            1.086819254160227,
+            1.153228430673856,
+            1.1600541850883836,
+            1.0807631674096592,
+            1.0761499537033576,
+            1.1437929785786167
+          ],
+          "minimum_lag_bin_count": 10000
+        }
+      ]
+    },
+    {
+      "simulation_seed": 2,
+      "match_seconds": 16.38610391000111,
+      "assignment_is_permutation": true,
+      "diagnostics": {
+        "feature_transform": "whiten",
+        "candidate_count": 96,
+        "candidate_count_requested": 48,
+        "candidate_columns_zero_degree": 278,
+        "greedy_unmatched": 353,
+        "greedy_unmatched_fraction": 0.0353,
+        "repair_rounds": 6,
+        "repair_max_distance": 23.289812562218057,
+        "final_match_distance_mean": 1.2726354139685225,
+        "final_match_distance_max": 23.289812562218057
+      },
+      "evaluations": [
+        {
+          "evaluation_seed": 101,
+          "variogram_correlations": [
+            0.9964037613919952,
+            0.9096663727360319,
+            0.9951909002374874,
+            0.9982480325950956,
+            0.9883509625780822,
+            0.9009602227523527
+          ],
+          "variogram_correlation_min": 0.9009602227523527,
+          "variogram_nrmse_max": 0.21606214035353316,
+          "variogram_sill_to_cloud_variance": [
+            1.0566558546855047,
+            1.0520302321472976,
+            1.1178901472532863,
+            1.0821474133353004,
+            1.0850716031056518,
+            1.0494717729534324
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 202,
+          "variogram_correlations": [
+            0.994320423866382,
+            0.9116752018561756,
+            0.9959812970530529,
+            0.9975339753172686,
+            0.9954892718296317,
+            0.9099803866527352
+          ],
+          "variogram_correlation_min": 0.9099803866527352,
+          "variogram_nrmse_max": 0.23754167778765953,
+          "variogram_sill_to_cloud_variance": [
+            1.0717043172587253,
+            1.0660282617568397,
+            1.1312822116440218,
+            1.0797289415944527,
+            1.0963848646981278,
+            1.0187465681760783
+          ],
+          "minimum_lag_bin_count": 10000
+        },
+        {
+          "evaluation_seed": 303,
+          "variogram_correlations": [
+            0.9932129529350826,
+            0.9128106225060993,
+            0.9956981664227182,
+            0.9955898642099319,
+            0.9885874211842894,
+            0.9111159019485967
+          ],
+          "variogram_correlation_min": 0.9111159019485967,
+          "variogram_nrmse_max": 0.23177119247183653,
+          "variogram_sill_to_cloud_variance": [
+            1.0833422547957872,
+            1.0928949361095537,
+            1.1270190404282483,
+            1.0686203980453772,
+            1.1138413189372305,
+            1.0432530358169916
+          ],
+          "minimum_lag_bin_count": 10000
+        }
+      ]
+    }
+  ]
+}

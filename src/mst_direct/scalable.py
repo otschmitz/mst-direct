@@ -30,8 +30,9 @@ from __future__ import annotations
 
 import numpy as np
 from scipy.spatial import cKDTree
+from scipy.stats import norm, rankdata
 
-__all__ = ["ScalableMST", "mst_simulate"]
+__all__ = ["ScalableMST", "mst_simulate", "transport_features"]
 
 
 def _standardize(a: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -39,6 +40,37 @@ def _standardize(a: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     sd = a.std(axis=0)
     sd = np.where(sd > 0, sd, 1.0)
     return (a - mu) / sd, mu, sd
+
+
+def transport_features(a: np.ndarray, transform: str = "whiten") -> np.ndarray:
+    """Return features used only for transport costs.
+
+    The original tuples are never transformed on output.  Whitening is the
+    appropriate default for an independent Gaussian backbone: unlike marginal
+    standardization, it removes the strong linear dependence that otherwise
+    makes much of the sparse candidate graph unreachable.
+    """
+    z, _, _ = _standardize(a)
+    if transform == "standardize":
+        return z
+    if transform == "gaussian_copula_whiten":
+        n = len(z)
+        z = np.column_stack(
+            [norm.ppf((rankdata(z[:, c], method="average") - 0.5) / n)
+             for c in range(z.shape[1])]
+        )
+    elif transform != "whiten":
+        raise ValueError(
+            "feature_transform must be 'standardize', 'whiten', or "
+            "'gaussian_copula_whiten'"
+        )
+    if z.shape[1] == 1:
+        return z
+    z = z - z.mean(axis=0)
+    evals, evecs = np.linalg.eigh(np.cov(z, rowvar=False))
+    whitener = evecs @ np.diag(np.clip(evals, 1e-10, None) ** -0.5) @ evecs.T
+    out = z @ whitener
+    return (out - out.mean(axis=0)) / np.where(out.std(axis=0) > 0, out.std(axis=0), 1.0)
 
 
 def _segment_logsumexp(values: np.ndarray, seg: np.ndarray, n_seg: int) -> np.ndarray:
@@ -129,34 +161,50 @@ def _repair_leftovers(
     assignment: np.ndarray,
     B: np.ndarray,
     U: np.ndarray,
-) -> np.ndarray:
-    """Assign rows left at ``-1`` to remaining free columns by nearest match."""
+) -> tuple[np.ndarray, dict[str, float | int]]:
+    """Assign leftovers by repeated nearest-free matching.
+
+    Every repaired assignment is selected by feature distance.  This replaces
+    the old arbitrary "first remaining column" fallback.
+    """
     free_rows = np.where(assignment < 0)[0]
     if len(free_rows) == 0:
-        return assignment
+        return assignment, {"repaired": 0, "repair_rounds": 0, "repair_max_distance": 0.0}
+    initial = len(free_rows)
     used = np.zeros(len(U), dtype=bool)
     used[assignment[assignment >= 0]] = True
     free_cols = np.where(~used)[0]
-    # nearest free column for each leftover row (greedy, descending confidence)
-    tree = cKDTree(U[free_cols])
-    # query a handful of nearest free cols per leftover row, assign greedily
-    kq = min(len(free_cols), 16)
-    _, nn = tree.query(B[free_rows], k=kq)
-    nn = np.asarray(nn).reshape(len(free_rows), kq)
-    taken = np.zeros(len(free_cols), dtype=bool)
-    for r, row_nn in zip(free_rows, nn):
-        placed = False
-        for local in row_nn:
-            if not taken[local]:
-                assignment[r] = free_cols[local]
-                taken[local] = True
-                placed = True
-                break
-        if not placed:  # fall back to any remaining free col
-            rem = np.where(~taken)[0]
-            assignment[r] = free_cols[rem[0]]
-            taken[rem[0]] = True
-    return assignment
+    rounds = 0
+    max_distance = 0.0
+    while len(free_rows):
+        rounds += 1
+        tree = cKDTree(U[free_cols])
+        kq = min(len(free_cols), 32)
+        dist, nn = tree.query(B[free_rows], k=kq)
+        dist = np.asarray(dist).reshape(len(free_rows), kq)
+        nn = np.asarray(nn).reshape(len(free_rows), kq)
+        # Most constrained/closest rows choose first.  Collisions retry another
+        # candidate in this round; unresolved rows are reconsidered against a
+        # rebuilt tree, so no row is ever assigned to an unrelated first-free
+        # column.
+        row_order = np.argsort(dist[:, 0], kind="stable")
+        taken = np.zeros(len(free_cols), dtype=bool)
+        placed_rows = np.zeros(len(free_rows), dtype=bool)
+        for q in row_order:
+            for rank, local in enumerate(nn[q]):
+                if not taken[local]:
+                    assignment[free_rows[q]] = free_cols[local]
+                    taken[local] = True
+                    placed_rows[q] = True
+                    max_distance = max(max_distance, float(dist[q, rank]))
+                    break
+        free_rows = free_rows[~placed_rows]
+        free_cols = free_cols[~taken]
+    return assignment, {
+        "repaired": int(initial),
+        "repair_rounds": int(rounds),
+        "repair_max_distance": float(max_distance),
+    }
 
 
 class ScalableMST:
@@ -166,38 +214,59 @@ class ScalableMST:
         beta: Inverse Sinkhorn regularization (kernel sharpness). Larger ->
             sharper / closer to true OT. Default 6.0 in standardized units.
         n_candidates: Candidate reference tuples considered per location.
+        max_candidates: Optional adaptive upper bound. Candidate support doubles
+            until at most ``candidate_zero_tolerance`` of target columns have
+            zero degree, or this bound is reached.
+        candidate_zero_tolerance: Maximum desired zero-degree target fraction.
         n_iter: Maximum Sinkhorn iterations.
         tol: Convergence tolerance on the column potentials.
         random_state: Seed (reserved for tie-breaking / future stochastic use).
+        feature_transform: Cost-space transform. ``"whiten"`` (default) aligns
+            dependent tuple features with independent Gaussian backbones while
+            output values remain untouched.
     """
 
     def __init__(
         self,
         beta: float = 6.0,
         n_candidates: int = 48,
+        max_candidates: int | None = None,
+        candidate_zero_tolerance: float = 0.01,
         n_iter: int = 150,
         tol: float = 1e-6,
         k_relational: int = 8,
         lam_relational: float = 0.0,
         n_relax: int = 0,
+        feature_transform: str = "whiten",
         random_state: int | None = None,
     ) -> None:
         self.beta = float(beta)
         self.n_candidates = int(n_candidates)
+        self.max_candidates = int(max_candidates) if max_candidates is not None else int(n_candidates)
+        self.candidate_zero_tolerance = float(candidate_zero_tolerance)
         self.n_iter = int(n_iter)
         self.tol = float(tol)
         self.k_relational = int(k_relational)
         self.lam_relational = float(lam_relational)
         self.n_relax = int(n_relax)
+        self.feature_transform = str(feature_transform)
         self.random_state = random_state
         self.assignment_: np.ndarray | None = None
+        self.diagnostics_: dict[str, float | int | str] = {}
 
     def _match(
         self, query: np.ndarray, Uf: np.ndarray, tree: cKDTree, nf: int
     ) -> np.ndarray:
         """One candidate-Sinkhorn-round pass mapping ``query`` rows to ``Uf``."""
         C = min(self.n_candidates, nf)
-        dist, nn = tree.query(query, k=C)
+        max_c = min(max(self.max_candidates, C), nf)
+        while True:
+            dist, nn = tree.query(query, k=C)
+            nn_check = np.asarray(nn).reshape(nf, C)
+            zero_fraction = 1.0 - np.unique(nn_check).size / nf
+            if zero_fraction <= self.candidate_zero_tolerance or C >= max_c:
+                break
+            C = min(2 * C, max_c)
         dist = np.atleast_2d(dist)
         nn = np.atleast_2d(nn)
         rows = np.repeat(np.arange(nf), C)
@@ -207,7 +276,21 @@ class ScalableMST:
         log_kernel = -self.beta * cost
         coupling = _sparse_sinkhorn(rows, cols, log_kernel, nf, nf, self.n_iter, self.tol)
         local = _greedy_round(rows, cols, coupling, nf, nf)
-        return _repair_leftovers(local, query, Uf)
+        local, repair = _repair_leftovers(local, query, Uf)
+        selected_distance = np.linalg.norm(query - Uf[local], axis=1)
+        self.diagnostics_ = {
+            "feature_transform": self.feature_transform,
+            "candidate_count": int(C),
+            "candidate_count_requested": int(self.n_candidates),
+            "candidate_columns_zero_degree": int(nf - np.unique(cols).size),
+            "greedy_unmatched": int(repair["repaired"]),
+            "greedy_unmatched_fraction": float(repair["repaired"] / max(nf, 1)),
+            "repair_rounds": int(repair["repair_rounds"]),
+            "repair_max_distance": float(repair["repair_max_distance"]),
+            "final_match_distance_mean": float(selected_distance.mean()),
+            "final_match_distance_max": float(selected_distance.max()),
+        }
+        return local
 
     def simulate(
         self,
@@ -247,7 +330,7 @@ class ScalableMST:
 
         # Standardize both into a common space (use the cloud's statistics so
         # the matched magnitudes are comparable to the target marginals).
-        Us, mu, sd = _standardize(cloud)
+        Us = transport_features(cloud, self.feature_transform)
         Bs = (B - B.mean(axis=0)) / B.std(axis=0)  # backbone -> N(0,1) per dim
 
         assignment = np.full(n, -1, dtype=np.int64)

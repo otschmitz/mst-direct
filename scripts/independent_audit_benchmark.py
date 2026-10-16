@@ -16,6 +16,7 @@ from mst_direct import (
     gaussian_backbone,
     grid_coords,
     histogram_mse_table,
+    transport_features,
 )
 
 
@@ -61,11 +62,11 @@ def main():
     pos = raw["cond_pos"].astype(np.int64) - 1
     data_rows = pos[:, 0] * 100 + pos[:, 1]
     data_cols = data_rows.copy()
-    standardized = (cloud_c - cloud_c.mean(0)) / cloud_c.std(0)
+    latent = transport_features(cloud_c, "whiten")
     coords_c = grid_coords(100, 100)
     start = time.perf_counter()
     bb_c = conditional_gaussian_backbone(
-        (100, 100), coords_c, data_rows, standardized[data_cols],
+        (100, 100), coords_c, data_rows, latent[data_cols],
         rng_range=18, random_state=42,
     )
     bb_c_seconds = time.perf_counter() - start
