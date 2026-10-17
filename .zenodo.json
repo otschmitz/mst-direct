@@ -1,0 +1,41 @@
+{
+  "title": "mst-direct: reproducible multivariate and conditional geostatistical simulation",
+  "description": "Version 2.2.0 provides the corrected sparse Sinkhorn matcher, deterministic reproduction of the DMS manuscript experiments, publication figures, machine-readable metrics, numerical artifacts, and the Swiss Jura blind hold-out workflow.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "version": "2.2.0",
+  "publication_date": "2026-10-17",
+  "creators": [
+    {
+      "name": "Bachmann Schmitz, Tcharlies",
+      "affiliation": "PX.Center",
+      "orcid": "0009-0007-5467-1327"
+    }
+  ],
+  "keywords": [
+    "geostatistics",
+    "optimal transport",
+    "Sinkhorn algorithm",
+    "multivariate simulation",
+    "conditional simulation",
+    "reproducible research"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/otschmitz/mst-direct",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.48550/arXiv.2606.07578",
+      "relation": "isSupplementTo",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.48550/arXiv.2603.18036",
+      "relation": "isNewVersionOf",
+      "scheme": "doi"
+    }
+  ]
+}

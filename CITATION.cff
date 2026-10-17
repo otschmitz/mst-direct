@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite the papers and the archived software release."
 title: "mst-direct: Matching via Sinkhorn Transport for multivariate geostatistical simulation"
 type: software
-version: 2.1.0
-date-released: 2026-10-16
+version: 2.2.0
+date-released: 2026-10-17
 authors:
   - family-names: "Bachmann Schmitz"
     given-names: "Tcharlies"

@@ -21,9 +21,19 @@ python scripts/download_dms_data.py
 Both files downloaded and SHA-256 checksums matched.
 ```
 
-This validates the packaged unit tests and small examples. It does not validate
-the numerical results printed in the manuscript because the original
-manuscript experiment scripts were not released.
+This validates the packaged unit tests and small examples. The corrected
+manuscript workflow is additionally validated by:
+
+```text
+python scripts/reproduce_manuscript_figures.py
+```
+
+The run completed on 17 October 2026 and produced complete permutations for
+both DMS experiments. The 40,000-node match took 65.68 s with a 4.99% repair
+fraction. The 10,000-node conditional match took 13.57 s, honoured all 200 hard
+tuples exactly, and had a 1.68% repair fraction. The PPMT conditioning error was
+1.85e-13. Full values and figures are under
+`artifacts/manuscript_reproduction/`.
 
 An additional independent audit rerun is implemented in
 `scripts/independent_audit_benchmark.py`, with output captured in

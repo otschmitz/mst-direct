@@ -19,7 +19,7 @@ on the candidate graph, rounding/completion, seed, and hyperparameters.
 > Geostatistical Simulation via Sinkhorn Optimal Transport.*
 > arXiv: [2606.07578](https://arxiv.org/abs/2606.07578)
 
-## What's new in 2.0
+## What's new in 2.2
 
 Version 2 scales the method to larger grids and adds the capabilities the
 original (bivariate, unconditional, small-grid) formulation left open:
@@ -130,10 +130,18 @@ trace-metal dataset. Run `python scripts/download_jura_data.py`, install the
 `real` extra, and execute `python scripts/jura_holdout_experiment.py`. Protocol,
 results, and limitations are documented in `docs/JURA_HOLDOUT.md`.
 
-The exact scripts used to generate the manuscript's 200×200 and 100×100
-figures were not included in the PyPI 2.0.0 or arXiv source archives. Therefore,
-this reconstructed repository does not claim end-to-end reproduction of those
-figures. See `docs/REPRODUCIBILITY.md` and `VALIDATION.md`.
+The complete input/output contract, parameter guidance, diagnostics, expected
+behaviour, and limitations are documented in `docs/USER_GUIDE.md`.
+
+The historical scripts used to generate the two preprints' 200×200 and 100×100
+figures were not included in the PyPI 2.0.0 or arXiv source archives. Version
+2.2 replaces that unavailable workflow with
+`scripts/reproduce_manuscript_figures.py`: a deterministic, end-to-end rerun
+using the corrected matcher, checksum-verified DMS data, fixed seeds, and the
+documented PPMT comparator. Publication figures (editable PDF and 360-dpi PNG),
+machine-readable metrics, and compressed numerical results are stored under
+`artifacts/manuscript_reproduction/`. See `docs/REPRODUCIBILITY.md` and
+`VALIDATION.md`.
 
 The initial independent scaling audit in `docs/SCALING_AUDIT.md` documents a
 failure regime of the original raw-standardized configuration. Corrected
